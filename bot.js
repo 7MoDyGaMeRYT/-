@@ -207,7 +207,7 @@ client.on('message', message =>{
         if(!reason) return message.channel.send("رجاء كتب سبب الريبروت");
     
         let reportEmbed = new Discord.RichEmbed()
-        .setTitle("User just reported...")
+        .setTitle("لقد قام شخص بعمل بلاغ للتو ")
         .setColor("#f7abab")
         .addField("**- Reported User :**", `${rUser}`)
         .addField("**- Reported By :**", `${message.author}`)
@@ -220,7 +220,7 @@ client.on('message', message =>{
     
     
         message.delete().catch(O_o=>{});
-        message.author.send(`<@${rUser.id}>, Reported Successfully!!`)
+        message.author.send(`<@${rUser.id}>, تم التبليغ بنجاح!!`)
         reportschannel.send(reportEmbed);
     };
 });
