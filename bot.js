@@ -243,8 +243,235 @@ if (message.content.startsWith(prefix + 'cp')) {
   client.user.setAvatar(argresult);
     message.channel.sendMessage(`**${argresult}** : تم تغيير صورة البوت بنجاح `);
 
+	const codes = {
+    ' ': '   ',
+    '0': '0⃣',
+    '1': '1⃣',
+    '2': '2⃣',
+    '3': '3⃣',
+    '4': '4⃣',
+    '5': '5⃣',
+    '6': '6⃣',
+    '7': '7⃣',
+    '8': '8⃣',
+    '9': '9⃣',
+    '!': '❕',
+    '?': '❔',
+    '#': '#⃣',
+    '*': '*⃣'
+  };
+  
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(c => {
+    codes[c] = codes[c.toUpperCase()] = ` :regional_indicator_${c}:`;
+  });
+  
+  
+  client.on('message' , async message => {
+      var prefix = "#";
+         if(message.content.startsWith(prefix + "emoji")) {
+            let args = message.content.split(" ").slice(1);
+    if (args.length < 1) {
+      message.channel.send('اكتب الكلام الى تبيه يصير بالاموجي');
+  }
+  
+  message.channel.send(
+      args.join(' ')
+          .split('')
+          .map(c => codes[c] || c)
+          .join('')
+  );
+  };
+  });
+  
+
+
+client.on("message", message => {
+
+            if (message.content.startsWith(prefix + "bconline")) {
+                         if (!message.member.hasPermission("ADMINISTRATOR"))  return;
+  let args = message.content.split(" ").slice(1);
+  var argresult = args.join(' '); 
+  message.guild.members.filter(m => m.presence.status !== 'offline').forEach(m => {
+ m.send(`${argresult}\n ${m}`);
+})
+ message.channel.send(`\`${message.guild.members.filter(m => m.presence.status !== 'online').size}\` اعضاء اونلاين استلمتهم رسالتك`); 
+ message.delete(); 
+};     
+});
+
+
+client.on('message', message => {
+	                  if(!message.channel.guild) return;
+    if(message.content.startsWith(prefix + 'bc ')) {
+    if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
+  if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send('**للأسف لا تمتلك صلاحية** `ADMINISTRATOR`' );
+    let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
+    let copy = "DragonBot";
+    let request = `Requested By ${message.author.username}`;
+    if (!args) return message.reply('**يجب عليك كتبت شي لأرسال البرودكاست**');message.channel.send(`**هل أنت متأكد من إرسالك البرودكاست؟ \nمحتوى البرودكاست:** \` ${args}\``).then(msg => {
+    msg.react('✅')
+    .then(() => msg.react('❌'))
+    .then(() =>msg.react('✅'))
+    
+    let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
+    let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
+    
+    let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
+    let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
+ reaction1.on("collect", r => {
+    message.channel.send(`**☑ | Done ... The Broadcast Message Has Been Sent For __${message.guild.members.size}__ Members**`).then(m => m.delete(5000));
+    message.guild.members.forEach(m => {
+  
+  var bc = new
+       Discord.RichEmbed()
+       .setColor('RANDOM')
+       .setTitle('Broadcast')
+       .addField('سيرفر', message.guild.name)
+       .addField('المرسل', message.author.username)
+       .addField('الرسالة', args)
+       .setThumbnail(message.author.avatarURL)
+       .setFooter(copy, client.user.avatarURL);
+    m.send({ embed: bc })
+    msg.delete();
+    })
+    })
+    reaction2.on("collect", r => {
+    message.channel.send(`**Broadcast Canceled.**`).then(m => m.delete(5000));
+    msg.delete();
+    })
+    })
+    }
+    });
+	
+
+
+client.on('message', message =>{
+    let args = message.content.split(' ');
+    let prefix = '#'; //تقدر تغير البرفكس
+    
+    if(args[0] === `${prefix}avatar`){
+        let mentions = message.mentions.members.first()
+        if(!mentions) {
+          let sicon = message.author.avatarURL
+          let embed = new Discord.RichEmbed()
+          .setImage(message.author.avatarURL)
+          .setColor("#f7abab") 
+          .setDescription(`**${message.author.username}#${message.author.discriminator}**'s avatar :`);
+          message.channel.send({embed})
+        } else {
+          let sicon = mentions.user.avatarURL
+          let embed = new Discord.RichEmbed()
+          .setColor("#f7abab")
+          .setDescription(`**${mentions.user.username}#${mentions.user.discriminator}**'s avatar :`)
+          .setImage(sicon)
+          message.channel.send({embed})
+        }
+    };
+});
+
+	
 }
 });
+
+
+   client.on('message', message => {
+     if (message.content === "#support") {
+     let embed = new Discord.RichEmbed()
+  .setAuthor(message.author.username)
+  .setColor("#9B59B6")
+  .addField(" ** :gear: Server Support :gear: **" , "  **Soon**")
+     
+     
+  message.channel.sendEmbed(embed);
+    }
+});
+
+
+    client.on('ready', function(){    
+        var ms = 40000 ;    
+        var setGame = [`on ${client.guilds.size} Server | ${client.users.size} User  `,'#help  For Helping Commands'];
+    
+        var i = -1;    
+        var j = 0;    
+        setInterval(function (){    
+            if( i == -1 ){    
+    j = 1;    
+           }    
+            if( i == (setGame.length)-1 ){    
+                j = -1;    
+          }    
+           i = i+j;    
+            client.user.setGame(setGame[i],`http://www.youtube.com/gg`);    
+    }, ms);    
+        
+    });
+
+
+
+
+
+
+client.on("message", async message => {
+            if(!message.channel.guild) return;
+            var prefix = "#";
+        if(message.content.startsWith(prefix + 'invites')) {
+        var nul = 0
+        var guild = message.guild
+        await guild.fetchInvites()
+            .then(invites => {
+             invites.forEach(invite => {
+                if (invite.inviter === message.author) {
+                     nul+=invite.uses
+                    }
+                });
+            });
+          if (nul > 0) {
+              console.log(`\n${message.author.tag} has ${nul} invites in ${guild.name}\n`)
+              var embed = new Discord.RichEmbed()
+                  .setColor("#000000")
+                    .addField(`${message.author.username}`, `لقد قمت بدعوة **${nul}** شخص`)
+                          message.channel.send({ embed: embed });
+                      return;
+                    } else {
+                       var embed = new Discord.RichEmbed()
+                        .setColor("#000000")
+                        .addField(`${message.author.username}`, `لم تقم بدعوة أي شخص لهذة السيرفر`)
+
+                       message.channel.send({ embed: embed });
+                        return;
+                    }
+        }
+        if(message.content.startsWith(prefix + 'link')) {
+let guild = message.guild
+var codes = [""]
+message.channel.send(":postbox: **لقد قمت بأرسال جميع روابط الدعوات التي قمت بأنشائها في الخاص**")
+guild.fetchInvites()
+.then(invites => {
+invites.forEach(invite => {
+if (invite.inviter === message.author) {
+codes.push(`discord.gg/${invite.code}`)
+}
+})
+}).then(m => {
+if (codes.length < 0) {
+    var embed = new Discord.RichEmbed()
+.setColor("#000000")
+.addField(`Your invite Links in ${message.guild.name}`, `You currently don't have any active invites! Please create an invite and start inviting, then you will be able to see your codes here!`)
+message.author.send({ embed: embed });
+return;
+} else {
+    var embed = new Discord.RichEmbed()
+.setColor("#000000")
+.addField(`Your invite Links in ${message.guild.name}`, `Invite Links:\n${codes.join("\n")}`)
+message.author.send({ embed: embed });
+return;
+}
+})
+}
+
+});
+
+
 
 
 client.login(process.env.BOT_TOKEN);
